@@ -10,7 +10,8 @@ import {
 } from "react-router-dom";
 import Home from './pages/Home.jsx';
 import Form from './components/Form'
-import FormikForm from './components/FormikForm.jsx';
+import FormikForm from './pages/FormikForm.jsx';
+import FormikForm2 from './pages/FormikForm2.jsx';
 
 const router = createBrowserRouter([
   // {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: "/formik",
     element: <FormikForm  />,
+  },
+  {
+    path: "/formik2",
+    element: <FormikForm2  />,
   },
 
 ]);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useFormik } from "formik";
+import { Form, Formik, useFormik } from "formik";
 import { basicSchema } from "../schema/index";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
@@ -63,6 +63,8 @@ const FormikForm = () => {
       </Link>
       <div className="card mb-0 text-bg-light pb-0">
         <h2>Enter Your details</h2>
+
+    
         <form
           action=""
           // onSubmit={handleChange}

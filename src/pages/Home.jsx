@@ -31,7 +31,7 @@ const Home = () => {
   };
 
   const handleDelete = (id) => {
-    console.log(id)
+    console.log(id);
     let index = formsArray.findIndex((item, i) => item.personId == id);
     formsArray.splice(index, 1);
     setFormsArray([...formsArray]);
@@ -41,7 +41,7 @@ const Home = () => {
   return (
     <Card>
       <Link to={"/formik2"}>
-        <div className="btn bg-primary btn-block text-white mb-4" >
+        <div className="btn bg-primary btn-block text-white mb-4">
           {" "}
           Add User
         </div>

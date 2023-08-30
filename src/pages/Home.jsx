@@ -8,43 +8,38 @@ const Home = () => {
   const navigate = useNavigate();
   const [modelOpen, setModelOpen] = useState(false);
 
-  const [formsArray, setFormsArray] = useState(
-    JSON.parse(localStorage.getItem("formsArray")) || []
-  );
-
-  useEffect(() => {
-    let data = JSON.parse(localStorage.getItem("formsArray"));
-    if (data) {
-      setFormsArray([...data]);
+  const [formsArray, setFormsArray] = useState(() => {
+    const storedData = JSON.parse(localStorage.getItem("formsArray"));
+    if (storedData) {
+      return storedData;
     } else {
       localStorage.setItem("formsArray", JSON.stringify([]));
+      return [];
     }
-  }, []);
+  });
 
   useEffect(() => {
     localStorage.setItem("formsArray", JSON.stringify(formsArray));
   }, [formsArray]);
 
   const handleEdit = (id) => {
-    let currentArray = formsArray.find((item, i) => item.personId == id);
+    let currentArray = formsArray.find((item) => item.personId == id);
     navigate("/formik2", { state: currentArray });
   };
 
   const handleDelete = (id) => {
-    console.log(id);
-    let index = formsArray.findIndex((item, i) => item.personId == id);
-    formsArray.splice(index, 1);
-    setFormsArray([...formsArray]);
+    setFormsArray((prevFormsArray) =>
+      prevFormsArray.filter((item) => item.personId !== id)
+    );
     setModelOpen(false);
   };
 
   return (
-    <Card>
-      <Link to={"/formik2"}>
-        <div className="btn bg-primary btn-block text-white mb-4">
-          {" "}
+    <Card className="border-white shadow-lg">
+      <Link to="/formik2">
+        <button className="btn bg-primary btn-block text-white mb-4">
           Add User
-        </div>
+        </button>
       </Link>
       <TableData
         formsArray={formsArray}

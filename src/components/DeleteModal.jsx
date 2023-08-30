@@ -1,27 +1,24 @@
-import React from 'react'
+import React from "react";
 import { Button, Card, Modal, Table } from "react-bootstrap";
 
-const DeleteModal = ({setModelOpen,handleDelete,modelOpen,data}) => {
+const DeleteModal = ({ setModelOpen, handleDelete, modelOpen, data }) => {
   return (
-    <Modal show={modelOpen} onHide={() => setModelOpen(false)} 
-    centered={true}
-    backdropClassName="bg-light opacity-25"
-    // fullscreen={false}
+    <Modal
+      show={modelOpen}
+      onHide={() => setModelOpen(false)}
+      centered={true}
+      backdropClassName="bg-secondary opacity-50"
+      // fullscreen={false}
     >
-      
       <Modal.Header closeButton>
         <Modal.Title>Confirm User Delete</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {" "}
         <p>
-          Do you want to delete this user record permanently from
-          the table.
+          Do you want to delete this user record permanently from the table.
         </p>
-        <p>
-          If yes then click on "Delete", otherwise click on
-          "Cancel"
-        </p>
+        <p>If yes then click on "Delete", otherwise click on "Cancel"</p>
       </Modal.Body>
       <Modal.Footer>
         <Button
@@ -40,7 +37,7 @@ const DeleteModal = ({setModelOpen,handleDelete,modelOpen,data}) => {
         </Button>
       </Modal.Footer>
     </Modal>
-  )
-}
+  );
+};
 
-export default DeleteModal
+export default DeleteModal;

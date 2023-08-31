@@ -3,27 +3,35 @@ import TableData from "../components/TableData";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Card } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const navigate = useNavigate();
   const [modelOpen, setModelOpen] = useState(false);
 
-  const [formsArray, setFormsArray] = useState(
-    JSON.parse(localStorage.getItem("formsArray")) || []
-  );
+  const data = useSelector((state) => state?.formsArray);
+
+  console.log(data);
+  const [formsArray, setFormsArray] = useState([...data]);
+  // useEffect(() => {
+  //   let data = JSON.parse(localStorage.getItem("formsArray"));
+  //   if (data) {
+  //     setFormsArray([...data]);
+  //   } else {
+  //     localStorage.setItem("formsArray", JSON.stringify([]));
+  //   }
+  // }, []);
 
   useEffect(() => {
-    let data = JSON.parse(localStorage.getItem("formsArray"));
-    if (data) {
+    console.log(data);
+    if (data?.length > 0) {
       setFormsArray([...data]);
-    } else {
-      localStorage.setItem("formsArray", JSON.stringify([]));
     }
-  }, []);
+  }, [data]);
 
-  useEffect(() => {
-    localStorage.setItem("formsArray", JSON.stringify(formsArray));
-  }, [formsArray]);
+  // useEffect(() => {
+  //   localStorage.setItem("formsArray", JSON.stringify(formsArray));
+  // }, [formsArray]);
 
   const handleEdit = (id) => {
     let currentArray = formsArray.find((item, i) => item.personId == id);
@@ -31,7 +39,7 @@ const Home = () => {
   };
 
   const handleDelete = (id) => {
-    console.log(id)
+    console.log(id);
     let index = formsArray.findIndex((item, i) => item.personId == id);
     formsArray.splice(index, 1);
     setFormsArray([...formsArray]);
@@ -41,7 +49,7 @@ const Home = () => {
   return (
     <Card>
       <Link to={"/formik2"}>
-        <div className="btn bg-primary btn-block text-white mb-4" >
+        <div className="btn bg-primary btn-block text-white mb-4">
           {" "}
           Add User
         </div>

@@ -11,31 +11,30 @@ import {
 import { basicSchema } from "../schema/index";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Card } from "react-bootstrap";
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from "uuid";
+import UserInputForm from "../components/UserInputForm";
+import { useDispatch, useSelector } from "react-redux";
+import { ADD_USER } from "../actions/action";
 
 const FormikForm2 = () => {
-  const unique_id = uuid().slice(0,8);
+  const unique_id = uuid().slice(0, 8);
   const navigate = useNavigate();
   const location = useLocation();
   const [editing, setEditing] = useState(false);
+  const dispatch = useDispatch();
 
+  console.log(ADD_USER);
 
+  console.log("location", location.state);
   useEffect(() => {
     if (location.state != null) {
-      let currentArray = location.state;
       setEditing(true);
     }
   }, []);
 
-  const updateInfo = (currentData) => {
-    let id = currentData.personId;
-    let formsArray = JSON.parse(localStorage.getItem("formsArray"));
-    let index = formsArray.findIndex((item, i) => item.personId == id);
-    formsArray.splice(index, 1, { ...currentData });
-    localStorage.setItem("formsArray", JSON.stringify([...formsArray]));
-    console.log(formsArray);
-    navigate("/");
-  };
+  const initialValues = location.state
+    ? { ...location.state }
+    : { name: "", email: "", phone: "", gender: null };
 
   return (
     <Card className="shadow-sm border-ligh-gray p-4 m-1 rounded">
@@ -45,103 +44,31 @@ const FormikForm2 = () => {
       >
         Go Home
       </Link>
-      <Card
-        className="border-white shadow-lg p-3 mb-3 bg-white rounded"
-      >
+      <Card className="border-white shadow-lg p-3 mb-3 bg-white rounded">
         <Formik
-          initialValues={
-            location.state != null
-              ? location.state
-              : { name: "", email: "", phone: "", gender: null }
-          }
+          initialValues={initialValues}
+          validateOnMount:true
           onSubmit={(values, actions) => {
-            let dataArray = JSON.parse(localStorage.getItem("formsArray"));
-            dataArray.push({ ...values, personId: unique_id });
-            localStorage.setItem("formsArray", JSON.stringify(dataArray));
-            actions.resetForm();
-            navigate("/");
-            console.log(values);
+            if (editing) {
+              navigate("/");
+            } else {
+              let done = dispatch(ADD_USER({ ...values, personId: unique_id }));
+              if (done) {
+                actions.resetForm();
+                navigate("/");
+              }
+            }
           }}
           validationSchema={basicSchema}
         >
-          {({ errors, touched, isSubmitting, isValid, values }) => (
-            <Form>
-              <label htmlFor="name" className="form-label">
-                Name
-              </label>
-              <Field
-                id="name"
-                type="text"
-                name="name"
-                placeholder="Enter your Name"
-              />
-
-              {errors.name && touched.name ? (
-                <div className="error">{errors.name}</div>
-              ) : null}
-
-              <label htmlFor="email" className="form-label">
-                Email
-              </label>
-              <Field
-                id="email"
-                name="email"
-                placeholder="Enter Your Email"
-                type="email"
-              />
-              {errors.email && touched.email ? (
-                <div className="error">{errors.email}</div>
-              ) : null}
-              <label htmlFor="phone" className="form-label">
-                Phone
-              </label>
-              <Field
-                id="phone"
-                name="phone"
-                placeholder="Enter Your Phone Number"
-                type="tel"
-                maxLength={10}
-              />
-              {errors.phone && touched.phone ? (
-                <div className="error">{errors.phone}</div>
-              ) : null}
-            
-              <div role="group" aria-labelledby="my-radio-group" className="d-flex align-items-baseline justify-content-between w-75 ms-2 mt-2">
-              <span id="my-radio-group" className="form-label">
-                Gender : 
-              </span>
-                <label  className="d-flex align-items-baseline">
-                <span className="me-2">Male</span>
-                  <Field type="radio" name="gender" value="male" />
-                 
-                </label>
-                <label  className="d-flex align-items-baseline">
-                <span className="me-2">Female</span>
-                  <Field type="radio" name="gender" value="female" />
-                  
-                </label>
-                {errors.gender && touched.gender ? (
-                  <div className="error">{errors.gender}</div>
-                ) : null}
-              </div>
-              {editing ? (
-                <Button
-                  className="bg-primary text-white mt-3"
-                  onClick={() => updateInfo(values)}
-                  disabled={isValid ? false : true}
-                >
-                  Save
-                </Button>
-              ) : (
-                <Button
-                  type="submit"
-                  className="bg-primary text-white mt-3"
-                  disabled={isSubmitting}
-                >
-                  Submit
-                </Button>
-              )}
-            </Form>
+          {({ errors, touched, isSubmitting, isValid }) => (
+            <UserInputForm
+              errors={errors}
+              touched={touched}
+              isSubmitting={isSubmitting}
+              isValid={isValid}
+              editing={editing}
+            ></UserInputForm>
           )}
         </Formik>
       </Card>

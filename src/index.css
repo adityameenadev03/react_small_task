@@ -103,7 +103,7 @@ form {
 form label {
   font-size: 1rem;
   font-weight: bold;
-  /* display: block; */
+  display: block;
   text-align: left;
   margin: 1rem 0 0.2rem;
 }
@@ -159,5 +159,5 @@ select.input-error {
 }
 
 button:disabled {
-  opacity: 0.35;
+  opacity: 0.25;
 }

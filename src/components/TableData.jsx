@@ -1,5 +1,4 @@
 import React from "react";
-import { useState } from "react";
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { Button, Card, Modal, Table } from "react-bootstrap";
 import DeleteModal from "./DeleteModal";
@@ -13,7 +12,6 @@ const TableData = ({
 }) => {
   return (
     <Card className="border-white shadow-lg p-3 mb-5 bg-white rounded">
-
       <h2 className="bg-secondary text-white p-3 mb-3">All Users</h2>
 
       <Table className="table table-striped table-bordered">
@@ -102,12 +100,12 @@ const TableData = ({
                     </div>
                   </div> */}
 
-               <DeleteModal 
-               setModelOpen={setModelOpen}
-               handleDelete={handleDelete}
-               modelOpen={modelOpen}
-               data={data}
-               ></DeleteModal>
+                  <DeleteModal
+                    setModelOpen={setModelOpen}
+                    handleDelete={handleDelete}
+                    modelOpen={modelOpen}
+                    data={data}
+                  ></DeleteModal>
                 </td>
               </tr>
             );
@@ -115,7 +113,6 @@ const TableData = ({
         </tbody>
       </Table>
     </Card>
-
   );
 };
 

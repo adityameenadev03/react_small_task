@@ -2,57 +2,33 @@ import React, { useEffect, useState } from "react";
 import TableData from "../components/TableData";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Card } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { Button, Card } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { DELETE_USER } from "../actions/action";
 
 const Home = () => {
   const navigate = useNavigate();
   const [modelOpen, setModelOpen] = useState(false);
+  const dispatch = useDispatch();
 
-  const data = useSelector((state) => state?.formsArray);
-
-  console.log(data);
-  const [formsArray, setFormsArray] = useState([...data]);
-  // useEffect(() => {
-  //   let data = JSON.parse(localStorage.getItem("formsArray"));
-  //   if (data) {
-  //     setFormsArray([...data]);
-  //   } else {
-  //     localStorage.setItem("formsArray", JSON.stringify([]));
-  //   }
-  // }, []);
-
-  useEffect(() => {
-    console.log(data);
-    if (data?.length > 0) {
-      setFormsArray([...data]);
-    }
-  }, [data]);
-
-  // useEffect(() => {
-  //   localStorage.setItem("formsArray", JSON.stringify(formsArray));
-  // }, [formsArray]);
+  const formsArray = useSelector((state) => state?.formsArray);
 
   const handleEdit = (id) => {
-    let currentArray = formsArray.find((item, i) => item.personId == id);
+    let currentArray = formsArray?.find((item, i) => item.personId == id);
     navigate("/formik2", { state: currentArray });
   };
 
   const handleDelete = (id) => {
-    console.log(id);
-    let index = formsArray.findIndex((item, i) => item.personId == id);
-    formsArray.splice(index, 1);
-    setFormsArray([...formsArray]);
+    dispatch(DELETE_USER(id));
     setModelOpen(false);
   };
 
   return (
     <Card>
       <Link to={"/formik2"}>
-        <div className="btn bg-primary btn-block text-white mb-4">
-          {" "}
+        <Button className="btn bg-primary btn-block text-white mb-4">
           Add User
-        </div>
+        </Button>
       </Link>
       <TableData
         formsArray={formsArray}

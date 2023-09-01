@@ -1,44 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-  ErrorMessage,
-  Field,
-  Form,
-  Formik,
-  useField,
-  useFormik,
-  useFormikContext,
-} from "formik";
+import { Field, Form, useFormikContext } from "formik";
 
-import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Card } from "react-bootstrap";
 const UserInputForm = ({ editing }) => {
   const formik = useFormikContext();
-  const { values, errors, touched, isSubmitting, isValid } = formik;
-  console.log(formik);
-  const [timeoutId, setTimeoutId] = useState(null);
-  const [error, setError] = useState(null);
-
-  const updateLocalState = (currentData) => {
-    let id = currentData.personId;
-    let formsArray = JSON.parse(localStorage.getItem("formsArray"));
-    let index = formsArray.findIndex((item, i) => item.personId == id);
-    formsArray.splice(index, 1, { ...currentData });
-    localStorage.setItem("formsArray", JSON.stringify([...formsArray]));
-  };
-  const updateInfo = (currentData) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    setTimeoutId(setTimeout(() => updateLocalState(currentData), 1000));
-  };
-
-  console.log("isValid", error, isValid);
-
-  useEffect(() => {
-    if (editing && isValid) {
-      updateInfo(values);
-    }
-  }, [values]);
+  const { errors, touched, isSubmitting, isValid } = formik;
 
   return (
     <>

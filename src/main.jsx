@@ -5,46 +5,20 @@ import "./index.css";
 import "bootstrap/dist/css/bootstrap.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home.jsx";
-import Form from "./components/Form";
-import FormikForm from "./pages/FormikForm.jsx";
 import FormikForm2 from "./pages/FormikForm2.jsx";
-import { SignupForm } from "./components/SignupForm.jsx";
-import BootstrapPractice from "./pages/bootstrapPractice.jsx";
 
-import { createStore } from "redux";
 import { Provider } from "react-redux";
-import rootReducer from "./reducers/rootReducer";
-
-const store = createStore(rootReducer);
+import store from "./store/store.js";
 
 const router = createBrowserRouter([
-  // {
-  //   path: "/",
-  //   element: <Root/>,
-  // },
   {
     path: "/",
     element: <Home />,
   },
-  {
-    path: "/form",
-    element: <Form />,
-  },
-  {
-    path: "/formik",
-    element: <FormikForm />,
-  },
+
   {
     path: "/formik2",
     element: <FormikForm2 />,
-  },
-  {
-    path: "/formik3",
-    element: <SignupForm />,
-  },
-  {
-    path: "/bootstrapPractice",
-    element: <BootstrapPractice></BootstrapPractice>,
   },
 ]);
 

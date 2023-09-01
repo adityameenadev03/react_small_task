@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {
-  ErrorMessage,
-  Field,
-  Form,
-  Formik,
-  useField,
-  useFormik,
-  useFormikContext,
-} from "formik";
+import { Formik } from "formik";
 import { basicSchema } from "../schema/index";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Card } from "react-bootstrap";
 import { v4 as uuid } from "uuid";
 import UserInputForm from "../components/UserInputForm";
 import { useDispatch, useSelector } from "react-redux";
-import { ADD_USER } from "../actions/action";
+import { ADD_USER, EDIT_USER, addUser } from "../actions/action.js";
 
 const FormikForm2 = () => {
   const unique_id = uuid().slice(0, 8);
@@ -23,9 +15,6 @@ const FormikForm2 = () => {
   const [editing, setEditing] = useState(false);
   const dispatch = useDispatch();
 
-  console.log(ADD_USER);
-
-  console.log("location", location.state);
   useEffect(() => {
     if (location.state != null) {
       setEditing(true);
@@ -50,13 +39,13 @@ const FormikForm2 = () => {
           validateOnMount:true
           onSubmit={(values, actions) => {
             if (editing) {
+              dispatch(EDIT_USER({ ...values, personId: unique_id }));
               navigate("/");
             } else {
-              let done = dispatch(ADD_USER({ ...values, personId: unique_id }));
-              if (done) {
-                actions.resetForm();
-                navigate("/");
-              }
+              // dispatch(ADD_USER({ ...values, personId: unique_id }));
+              dispatch(addUser({ ...values, personId: unique_id }));
+              actions.resetForm();
+              // navigate("/");
             }
           }}
           validationSchema={basicSchema}

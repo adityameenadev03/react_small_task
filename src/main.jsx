@@ -9,6 +9,7 @@ import FormikForm2 from "./pages/FormikForm2.jsx";
 
 import { Provider } from "react-redux";
 import store from "./store/store.js";
+import { Counter } from "./redux/counter.jsx";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: "/formik2",
     element: <FormikForm2 />,
+  },
+  {
+    path: "/counter",
+    element: <Counter />,
   },
 ]);
 

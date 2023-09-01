@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Card } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { DELETE_USER } from "../actions/action";
+import { DELETE_USER, deleteUser, getAllUsers } from "../actions/action";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -20,9 +20,15 @@ const Home = () => {
 
   const handleDelete = (id) => {
     console.log(id);
-    dispatch(DELETE_USER(id));
+    const deleteArray = [...formsArray].find((item) => item.personId == id);
+    console.log(deleteArray);
+    dispatch(deleteUser(deleteArray));
     setModelOpen(false);
   };
+
+  useEffect(() => {
+    dispatch(getAllUsers());
+  }, []);
 
   return (
     <Card>

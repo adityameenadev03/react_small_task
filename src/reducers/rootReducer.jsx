@@ -5,6 +5,10 @@ console.log(initState);
 
 const rootReducer = (state = initState, action) => {
   switch (action.type) {
+    case "GET_ALL_USER":
+      localStorage.setItem("formsArray", JSON.stringify(action.payload));
+      return { ...state, formsArray: [...action.payload] };
+
     case "ADD_USER":
       console.log("ehlo");
       let newFormsArray = [...state.formsArray, action.payload];
@@ -23,6 +27,8 @@ const rootReducer = (state = initState, action) => {
         item.personId == action.payload.personId ? { ...action.payload } : item
       );
       localStorage.setItem("formsArray", JSON.stringify(newEditedArray));
+      console.log("edited");
+      console.log("acction pyaload", action.payload);
       return { ...state, formsArray: [...newEditedArray] };
     default:
       return state;

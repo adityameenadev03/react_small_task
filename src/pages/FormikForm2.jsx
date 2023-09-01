@@ -6,7 +6,7 @@ import { Button, Card } from "react-bootstrap";
 import { v4 as uuid } from "uuid";
 import UserInputForm from "../components/UserInputForm";
 import { useDispatch, useSelector } from "react-redux";
-import { ADD_USER, EDIT_USER, addUser } from "../actions/action.js";
+import { ADD_USER, EDIT_USER, addUser, editUser } from "../actions/action.js";
 
 const FormikForm2 = () => {
   const unique_id = uuid().slice(0, 8);
@@ -39,13 +39,14 @@ const FormikForm2 = () => {
           validateOnMount:true
           onSubmit={(values, actions) => {
             if (editing) {
-              dispatch(EDIT_USER({ ...values, personId: unique_id }));
+              console.log("values", values);
+              dispatch(editUser({ ...values, personId: unique_id }));
               navigate("/");
             } else {
               // dispatch(ADD_USER({ ...values, personId: unique_id }));
               dispatch(addUser({ ...values, personId: unique_id }));
               actions.resetForm();
-              // navigate("/");
+              navigate("/");
             }
           }}
           validationSchema={basicSchema}

@@ -25,10 +25,11 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
+  background-color: #a0aec0;
+  /* display: flex;
   place-items: center;
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 100vh; */
 }
 
 h1 {
@@ -68,7 +69,6 @@ button:focus-visible {
   }
 }
 
-
 .error {
   color: #fc8181;
   font-size: 0.75rem;
@@ -89,9 +89,6 @@ button:focus-visible {
   margin-top: 0.25rem;
 }
 
-
-
-
 form {
   /* width: 95%; */
   width: 400px;
@@ -108,7 +105,7 @@ form label {
   margin: 1rem 0 0.2rem;
 }
 
-form span{
+form span {
   font-size: 1rem;
   font-weight: bold;
   text-align: left;
@@ -137,13 +134,11 @@ select::placeholder {
   color: #a0aec0;
 }
 
-
-
 button {
   display: block;
   margin: 1rem 0;
   padding: 0.35rem 0.5rem;
-  background-color: #4299e1;
+  /* background-color: #4299e1; */
   color: #1a202c;
   border: none;
   border-radius: 3px;

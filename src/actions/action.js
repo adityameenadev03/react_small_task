@@ -1,3 +1,17 @@
+export const SET_FETCH_ERROR = (data) => {
+  return {
+    type: "SET_FETCH_ERROR",
+    payload: data,
+  };
+};
+
+export const SET_LOADING_STATUS = (data) => {
+  return {
+    type: "SET_LOADING_STATUS",
+    payload: data,
+  };
+};
+
 export const EDIT_USER = (data) => {
   return {
     type: "EDIT_USER",
@@ -29,27 +43,45 @@ export const ADD_USER = (data) => {
 // addUser is a action cretor which return thunk function to perform async task
 //  you can also pass thunk function directly to dispatch
 export const addUser = (someOther) => {
-  return async (disptach, getState) => {
-    const response = await fetch("http://localhost:8000/addUser", {
-      method: "POST",
-      body: JSON.stringify({
-        ...someOther,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    });
+  return async (dispatch, getState) => {
+    dispatch(SET_FETCH_ERROR(false));
+    dispatch(SET_LOADING_STATUS(true));
+    try {
+      const response = await fetch("http://localhost:8000/addUser", {
+        method: "POST",
+        body: JSON.stringify({
+          ...someOther,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+      let data = await response.json();
 
-    let data = await response.json();
-    console.log(data);
-    if (data) {
-      disptach(ADD_USER(data));
+      if (response.status == 400) {
+        throw new Error(`${data.message}`);
+      }
+      if (!response.ok) {
+        throw new Error(`${response.statusText}`);
+      }
+
+      if (response.status == 201) {
+        console.log("dispathed");
+        dispatch(ADD_USER(data.data));
+      }
+      dispatch(SET_LOADING_STATUS(false));
+    } catch (error) {
+      console.log(error);
+      dispatch(SET_FETCH_ERROR({ message: error.message }));
+      dispatch(SET_LOADING_STATUS(false));
     }
   };
 };
 
 export const deleteUser = (someOther) => {
-  return async (disptach, getState) => {
+  return async (dispatch, getState) => {
+    dispatch(SET_FETCH_ERROR(false));
+    dispatch(SET_LOADING_STATUS(true));
     try {
       const response = await fetch("http://localhost:8000/deleteUser", {
         method: "DELETE",
@@ -60,16 +92,28 @@ export const deleteUser = (someOther) => {
           "Content-type": "application/json; charset=UTF-8",
         },
       });
+
       let data = await response.json();
-      disptach(DELETE_USER(someOther.personId));
-    } catch (err) {
-      console.log(err);
+
+      if (!response.ok) {
+        throw new Error(`${response.statusText}`);
+      }
+
+      if (response.status == 204) {
+        console.log("dispathed");
+        dispatch(DELETE_USER(someOther.personId));
+      }
+      dispatch(SET_LOADING_STATUS(false));
+    } catch (error) {
+      console.log(error);
+      dispatch(SET_FETCH_ERROR({ message: error.message }));
+      dispatch(SET_LOADING_STATUS(false));
     }
   };
 };
 
 export const editUser = (someOther) => {
-  return async (disptach, getState) => {
+  return async (dispatch, getState) => {
     try {
       const response = await fetch("http://localhost:8000/editUser", {
         method: "PUT",
@@ -80,9 +124,13 @@ export const editUser = (someOther) => {
           "Content-type": "application/json; charset=UTF-8",
         },
       });
-      let data = await response.json();
-      console.log("server data", data);
-      disptach(EDIT_USER(data));
+      if (!response.ok) {
+        throw new Error(`${response.statusText}`);
+      }
+      const data = await response.json();
+      if (response.status == 201) {
+        dispatch(EDIT_USER(data.data));
+      }
     } catch (err) {
       console.log(err);
     }
@@ -90,18 +138,26 @@ export const editUser = (someOther) => {
 };
 
 export const getAllUsers = (someOther) => {
-  return async (disptach, getState) => {
-    let data;
+  return async (dispatch, getState) => {
+    dispatch(SET_FETCH_ERROR(false));
+    dispatch(SET_LOADING_STATUS(true));
+
     try {
       const response = await fetch("http://localhost:8000/getAllUsers");
-      data = await response.json();
-      console.log(data);
-      console.log(typeof data);
+      if (!response.ok) {
+        throw new Error(`${response.statusText}`);
+      }
+      const data = await response.json();
+      if (response.status == 200) {
+        console.log("dispathed");
+        console.log(data);
+        dispatch(GET_ALL_USER(data.data));
+      }
+      dispatch(SET_LOADING_STATUS(false));
     } catch (err) {
       console.log(err);
-    }
-    if (data) {
-      disptach(GET_ALL_USER(data));
+      dispatch(SET_FETCH_ERROR({ message: err.message }));
+      dispatch(SET_LOADING_STATUS(false));
     }
   };
 };

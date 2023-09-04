@@ -11,6 +11,12 @@ import { Provider } from "react-redux";
 import store from "./store/store.js";
 import { Counter } from "./redux/counter.jsx";
 
+// app.js
+import { QueryClient, QueryClientProvider } from "react-query";
+import FetchData from "./pages/fetchData.jsx";
+// Initialze the client
+const queryClient = new QueryClient();
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -22,17 +28,17 @@ const router = createBrowserRouter([
     element: <FormikForm2 />,
   },
   {
-    path: "/counter",
-    element: <Counter />,
+    path: "/fetchData",
+    element: <FetchData />,
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <Provider store={store}>
+  <Provider store={store}>
+    <QueryClientProvider client={queryClient}>
       <RouterProvider router={router}>
         <App />
       </RouterProvider>
-    </Provider>
-  </React.StrictMode>
+    </QueryClientProvider>
+  </Provider>
 );

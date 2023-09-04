@@ -18,6 +18,7 @@ import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 
 const deleteUser = (id) => {
+  console.log("hello");
   return axios.delete(`http://localhost:8000/deleteUser/${id}`);
 };
 

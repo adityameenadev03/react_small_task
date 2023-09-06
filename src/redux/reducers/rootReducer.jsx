@@ -16,7 +16,7 @@ const rootReducer = (state = initState, action) => {
       return { ...state, formsArray: [...action.payload] };
 
     case "ADD_USER":
-      console.log("ehlo");
+      console.log(action.payload);
       let newFormsArray = [...state.formsArray, action.payload];
       localStorage.setItem("formsArray", JSON.stringify(newFormsArray));
       return { ...state, formsArray: [...newFormsArray] };
@@ -36,8 +36,9 @@ const rootReducer = (state = initState, action) => {
         item.personId == action.payload.personId ? { ...action.payload } : item
       );
       localStorage.setItem("formsArray", JSON.stringify(newEditedArray));
-      console.log("edited");
-      console.log("new daata", newEditedArray);
+      console.log("dispatch");
+      console.log("to be edit array", { ...action.payload });
+      console.log("after edit", newEditedArray);
       return { ...state, formsArray: [...newEditedArray] };
     default:
       return state;

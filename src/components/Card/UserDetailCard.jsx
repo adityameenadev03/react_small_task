@@ -8,7 +8,7 @@ import {
   Row,
 } from "react-bootstrap";
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
-import DeleteModal from "./DeleteModal";
+import DeleteModal from "../Model/DeleteModal";
 
 const UserDetailCard = ({
   handleDelete,

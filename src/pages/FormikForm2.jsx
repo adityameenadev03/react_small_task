@@ -4,44 +4,20 @@ import { basicSchema } from "../schema/index";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Card, Container, ToastContainer } from "react-bootstrap";
 import { v4 as uuid } from "uuid";
-import UserInputForm from "../components/UserInputForm";
+import UserInputForm from "../components/Form/UserInputForm";
 import { useDispatch, useSelector } from "react-redux";
-import { ADD_USER, EDIT_USER, addUser, editUser } from "../actions/action.js";
-import axios from "axios";
-import { useMutation } from "react-query";
+import { ADD_USER, EDIT_USER } from "../redux/actions/action.js";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { addUser, editUser } from "../Service/service";
 
-const addUserApi = (data) => {
-  return axios
-    .post("http://localhost:8000/addUser", {
-      ...data,
-    })
-    .then(function (response) {
-      return response;
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-};
-
-const editUserApi = (data) => {
-  return axios
-    .put("http://localhost:8000/editUser", {
-      ...data,
-    })
-    .then(function (response) {
-      return response;
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-};
 const FormikForm2 = () => {
   const unique_id = uuid().slice(0, 8);
   const navigate = useNavigate();
   const location = useLocation();
   const [editing, setEditing] = useState(false);
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const notify = (error) => toast.error(error?.message);
   const successNotification = (message) => toast.success(message);
@@ -52,9 +28,9 @@ const FormikForm2 = () => {
     }
   }, []);
 
-  const { mutate, data, isLoading, isError } = useMutation(addUserApi, {
-    onSuccess: (data) => {
-      console.log("User succesfully Added", data?.data?.data);
+  const { mutate, isLoading, isError } = useMutation(addUser, {
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["allUsers"] });
       dispatch(ADD_USER({ ...data?.data?.data }));
       successNotification("User succesfully Added");
     },
@@ -64,24 +40,17 @@ const FormikForm2 = () => {
     },
   });
 
-  const { mutate: mutatefn } = useMutation(editUserApi, {
+  const { mutate: mutatefn } = useMutation(editUser, {
     onSuccess: (data) => {
-      console.log("User succesfully Edited");
-      console.log(data?.data?.data);
+      queryClient.invalidateQueries({ queryKey: ["allUsers"] });
       dispatch(EDIT_USER({ ...data?.data?.data }));
       successNotification("User succesfully Edited");
     },
-    refetchQueries: [{ query: "allUsers" }],
     onError: (error) => {
       const { name, message } = error;
       notify({ name, message });
     },
   });
-
-  console.log(data);
-  // const postUser = (data) => {
-  //   mutate()
-  // }
 
   const initialValues = location.state
     ? { ...location.state }
@@ -114,12 +83,16 @@ const FormikForm2 = () => {
             validateOnMount:true
             onSubmit={(values, actions) => {
               if (editing) {
-                console.log("values", values);
-                mutatefn({ ...values, personId: unique_id });
+                mutatefn({
+                  param: "/editUser",
+                  data: { ...values, personId: unique_id },
+                });
                 navigate("/");
               } else {
-                // dispatch(ADD_USER({ ...values, personId: unique_id }));
-                mutate({ ...values, personId: unique_id });
+                mutate({
+                  param: "/addUser",
+                  data: { ...values, personId: unique_id },
+                });
                 actions.resetForm();
                 navigate("/");
               }

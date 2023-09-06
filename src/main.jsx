@@ -8,13 +8,12 @@ import Home from "./pages/Home.jsx";
 import FormikForm2 from "./pages/FormikForm2.jsx";
 
 import { Provider } from "react-redux";
-import store from "./store/store.js";
-import { Counter } from "./redux/counter.jsx";
+import store from "./redux/store/store.js";
 
-// app.js
-import { QueryClient, QueryClientProvider } from "react-query";
-import FetchData from "./pages/fetchData.jsx";
-// Initialze the client
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import AxiosLearn from "./redux/actions/axiosLearn.jsx";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
@@ -27,9 +26,10 @@ const router = createBrowserRouter([
     path: "/formik2",
     element: <FormikForm2 />,
   },
+
   {
-    path: "/fetchData",
-    element: <FetchData />,
+    path: "/axioslearn",
+    element: <AxiosLearn></AxiosLearn>,
   },
 ]);
 
@@ -38,6 +38,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router}>
         <App />
+        <ReactQueryDevtools initialIsOpen={true} />
       </RouterProvider>
     </QueryClientProvider>
   </Provider>

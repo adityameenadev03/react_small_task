@@ -4,27 +4,13 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Card, Container } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  DELETE_USER,
-  GET_ALL_USER,
-  SET_FETCH_ERROR,
-  getAllUsers,
-} from "../actions/action";
-import UserDetailCard from "../components/UserDetailCard";
-import Loader from "../components/Loader";
+import { DELETE_USER, GET_ALL_USER } from "../redux/actions/action";
+import UserDetailCard from "../components/Card/UserDetailCard";
+import Loader from "../components/Loader/Loader";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useMutation, useQuery } from "react-query";
-import axios from "axios";
-
-const deleteUser = (id) => {
-  console.log("hello");
-  return axios.delete(`http://localhost:8000/deleteUser/${id}`);
-};
-
-const fetchAllUsers = () => {
-  return axios.get(`http://localhost:8000/getAllUsers`);
-};
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { fetchAllUsers, deleteUser } from "../Service/service";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -33,25 +19,19 @@ const Home = () => {
 
   const formsArray = useSelector((state) => state?.formsArray);
 
-  // const loading = useSelector((state) => state?.loading);
-  // const error = useSelector((state) => state?.error);
-
   const notify = (error) => toast.error(error?.message);
   const successNotification = (message) => toast.success(message);
 
-  // Queries
   const {
     data,
     isLoading,
     isError: fetchingError,
     isSuccess,
   } = useQuery({
-    queryKey: "allUsers",
+    queryKey: ["allUsers"],
 
-    queryFn: fetchAllUsers,
-    refetchOnMount: true,
+    queryFn: () => fetchAllUsers("/getAllUsers"),
     onSuccess: (data) => {
-      console.log(data.data.data);
       dispatch(GET_ALL_USER(data.data.data));
       successNotification("Users Fetched");
     },
@@ -64,9 +44,8 @@ const Home = () => {
   const { mutate, isError: deleteError } = useMutation({
     mutationFn: deleteUser,
     onSuccess: (data, variables) => {
-      const id = variables;
-      console.log(id);
-      console.log("data succesfully deleted", data);
+      const id = variables.split("/")[1];
+
       dispatch(DELETE_USER(id));
       successNotification("Item Deleted");
     },
@@ -83,13 +62,9 @@ const Home = () => {
 
   const handleDelete = (id) => {
     const deleteArray = [...formsArray].find((item) => item.personId == id);
-    mutate(deleteArray._id);
+    mutate(`deleteUser/${deleteArray._id}`);
     setModelOpen(false);
   };
-
-  useEffect(() => {
-    // dispatch(getAllUsers());
-  }, []);
 
   return (
     <>
@@ -105,7 +80,6 @@ const Home = () => {
           />
         </div>
       )}
-      {isLoading && !fetchingError && <Loader> </Loader>}
 
       <Container className="mt-5">
         <Link to={"/formik2"}>
@@ -113,6 +87,8 @@ const Home = () => {
             Add User
           </div>
         </Link>
+
+        {isLoading && !fetchingError && <Loader> </Loader>}
 
         {isSuccess && (
           <>

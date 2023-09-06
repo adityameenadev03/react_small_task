@@ -7,7 +7,6 @@ import { v4 as uuid } from "uuid";
 import UserInputForm from "../components/Form/UserInputForm";
 import { useDispatch, useSelector } from "react-redux";
 import { ADD_USER, EDIT_USER } from "../redux/actions/action.js";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { addUser, editUser } from "../Service/service";
 
@@ -17,7 +16,8 @@ const FormikForm2 = () => {
   const location = useLocation();
   const [editing, setEditing] = useState(false);
   const dispatch = useDispatch();
-  const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const notify = (error) => toast.error(error?.message);
   const successNotification = (message) => toast.success(message);
@@ -28,37 +28,13 @@ const FormikForm2 = () => {
     }
   }, []);
 
-  const { mutate, isLoading, isError } = useMutation(addUser, {
-    onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["allUsers"] });
-      dispatch(ADD_USER({ ...data?.data?.data }));
-      successNotification("User succesfully Added");
-    },
-    onError: (error) => {
-      const { name, message } = error;
-      notify({ name, message });
-    },
-  });
-
-  const { mutate: mutatefn } = useMutation(editUser, {
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["allUsers"] });
-      dispatch(EDIT_USER({ ...data?.data?.data }));
-      successNotification("User succesfully Edited");
-    },
-    onError: (error) => {
-      const { name, message } = error;
-      notify({ name, message });
-    },
-  });
-
   const initialValues = location.state
     ? { ...location.state }
     : { name: "", email: "", phone: "", gender: null };
 
   return (
     <Container className="d-flex justify-content-center ">
-      {!isError && !isLoading && (
+      {!error && !isLoading && (
         <div>
           <ToastContainer
             toastClassName={() =>
@@ -83,18 +59,28 @@ const FormikForm2 = () => {
             validateOnMount:true
             onSubmit={(values, actions) => {
               if (editing) {
-                mutatefn({
-                  param: "/editUser",
-                  data: { ...values, personId: unique_id },
-                });
-                navigate("/");
+                const editUserOnApi = async () => {
+                  const data = await editUser("/editUser", {
+                    ...values,
+                    personId: unique_id,
+                  });
+
+                  dispatch(EDIT_USER({ ...data, personId: unique_id }));
+                  navigate("/");
+                };
+                editUserOnApi();
               } else {
-                mutate({
-                  param: "/addUser",
-                  data: { ...values, personId: unique_id },
-                });
-                actions.resetForm();
-                navigate("/");
+                const addUserFetch = async () => {
+                  const data = await addUser("/addUser", {
+                    ...values,
+                    personId: unique_id,
+                  });
+                  dispatch(ADD_USER({ ...data, personId: unique_id }));
+                  actions.resetForm();
+                  navigate("/");
+                };
+
+                addUserFetch();
               }
             }}
             validationSchema={basicSchema}

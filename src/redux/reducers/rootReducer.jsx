@@ -12,6 +12,7 @@ const rootReducer = (state = initState, action) => {
     case "SET_LOADING_STATUS":
       return { ...state, loading: action.payload };
     case "GET_ALL_USER":
+      console.log(action.payload);
       localStorage.setItem("formsArray", JSON.stringify(action.payload));
       return { ...state, formsArray: [...action.payload] };
 
@@ -33,7 +34,7 @@ const rootReducer = (state = initState, action) => {
 
     case "EDIT_USER":
       let newEditedArray = [...state.formsArray].map((item) =>
-        item.personId == action.payload.personId ? { ...action.payload } : item
+        item._id == action.payload._id ? { ...action.payload } : item
       );
       localStorage.setItem("formsArray", JSON.stringify(newEditedArray));
       console.log("dispatch");

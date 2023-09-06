@@ -64,7 +64,7 @@ app.post("/addManyUser", async (req, res) => {
   try {
     const data = await User.insertMany([...userDetail]);
     console.log(data);
-    res.status(201).json({
+    res.status(200).json({
       status: "ok",
     });
   } catch (err) {

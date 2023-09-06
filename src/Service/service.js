@@ -1,96 +1,71 @@
 import axios from "axios";
-const instance = axios.create({
-  baseURL: "http://localhost:8000",
 
-  //   headers: { "Authorization": `Bearer ${"563492ad6f91700001000001429a36bd1bb24659933594c131ab9fdc"}` },
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const notify = (error) => toast.error(error?.message);
+const successNotification = (message) => toast.success(message);
+
+export const instance = axios.create({
+  baseURL: "http://localhost:8000",
 });
 
+instance.interceptors.request.use(
+  function (config) {
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
 instance.interceptors.response.use(
   (response) => {
+    successNotification("Data Fetched");
     console.log(response);
-    const { data: data } = response;
-    console.log(data);
     return response;
   },
   (error) => {
-    switch (error.response.status) {
-      case 404:
-        throw Error("Not Found");
-      case 500:
-        throw Error("Internal Server Error");
+    console.log(error);
+    notify(error);
+
+    try {
+      switch (error.response.status) {
+        case 404:
+          throw Error("Not Found");
+        case 500:
+          throw Error("Internal Server Error");
+      }
+    } catch (err) {
+      return Promise.reject(error);
     }
+
     if (error.response && error.response.data) {
+      notify(error);
       return Promise.reject(error.response.data);
     }
-    return Promise.reject(error.message);
   }
 );
 
-// instance.interceptors.request.use((req) => {
-//   console.log(req);
-//   return req;
-// });
-
 export const fetchAllUsers = async (params) => {
   const response = await instance.get(`${params}`);
-  return response;
-  //   return response?.data?.data;
-  //   return response?.data?.result;
+  return response?.data?.data;
 };
 
 export const deleteUser = async (param) => {
   const response = await instance.delete(`${param}`);
-  try {
-    if (response.status === 200) {
-      console.log(response?.data);
-      return response;
-      //   return response?.data?.result;
-    } else {
-      return [];
-    }
-  } catch (error) {
-    return error;
-  }
+  return response;
 };
 
-export const addUser = async (obj) => {
-  const { param, data } = obj;
+export const addUser = async (param, data) => {
+  // const { param, data } = obj;
+  console.log(data);
   const response = await instance.post(`${param}`, data);
-  try {
-    if (response.status === 200) {
-      console.log(response?.data);
-      return response;
-      //   return response?.data?.result;
-    } else {
-      return [];
-    }
-  } catch (error) {
-    return error;
-  }
+  console.log(response?.data);
+
+  return response?.data?.data;
 };
 
-export const editUser = async (obj) => {
-  const { param, data } = obj;
+export const editUser = async (param, data) => {
   const response = await instance.put(`${param}`, data);
-  try {
-    if (response.status === 200) {
-      console.log(response?.data);
-      return response;
-      //   return response?.data?.result;
-    } else {
-      return [];
-    }
-  } catch (error) {
-    return error;
-  }
+  return response?.data?.data;
 };
-
-// const res1 = await deleteUser("/deleteUser/64f6c673a29301cddf37ad7a");
-// console.log("res 1-----------", res1);
-
-// const fetchAllUsers2 = async () => {
-//   return axios.get(`http://localhost:8000/getAllUsers`).then((data) => data);
-// };
-
-// const res2 = await fetchAllUsers2();
-// console.log("res2 ----------", res2);

@@ -19,9 +19,7 @@ const userSchema = new Schema({
   },
 });
 
-// static signup method
 userSchema.statics.signup = async function (name, email, password) {
-  // validation
   if (!email || !email || !password) {
     throw Error("All fields must be filled");
   }
@@ -37,9 +35,6 @@ userSchema.statics.signup = async function (name, email, password) {
     throw Error("email already in use");
   }
 
-  // generates a salt
-  //  A salt is a random string that is used as an additional input to the hash function
-  // The purpose of the salt is to make it more difficult to guess the original password by adding randomness to the hash.
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
   const user = await this.create({ name, email, password: hash });
@@ -47,20 +42,21 @@ userSchema.statics.signup = async function (name, email, password) {
   return user;
 };
 
-// static login method
-
 userSchema.statics.login = async function (email, password) {
-  // validation
   if (!email || !password) {
     throw Error("All fields must be filled");
   }
   const user = await this.findOne({ email });
   if (!user) {
-    throw Error("Incorrect Email");
+    throw Error({
+      status: "error",
+      field: "email",
+      message: "Incorrect Email",
+    });
   }
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
-    throw Error("Incorrect password");
+    throw Error("Incorrect Password");
   }
   return user;
 };

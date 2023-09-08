@@ -3,7 +3,7 @@ import React from "react";
 import { signUpSchema } from "../schema/signUpSchema";
 import { Button, Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { SET_USER } from "../redux/actions/action";
+import { SET_ERROR, SET_USER } from "../redux/actions/action";
 import { Link, useNavigate } from "react-router-dom";
 import { loginSchema } from "../schema/loginSchema";
 import { loginUser } from "../api/authApi";
@@ -11,16 +11,21 @@ import { loginUser } from "../api/authApi";
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const checkUseronDatabase = async (values) => {
+  const checkUseronDatabase = async (values, formikFunctions) => {
     try {
-      const data = await loginUser("/login", values);
+      const data = await loginUser("/api/userData/loginUser", values);
       if (data) {
         dispatch(SET_USER(data));
         navigate("/");
       }
       console.log("fetch from server", data);
     } catch (err) {
-      console.log(err);
+      if (err.message.toLowerCase().includes("password")) {
+        formikFunctions.setErrors({ password: err.message });
+      } else if (err.message.toLowerCase().includes("email")) {
+        formikFunctions.setErrors({ email: err.message });
+      }
+      formikFunctions.setSubmitting(false);
     }
   };
   return (
@@ -29,9 +34,9 @@ const Login = () => {
         <Formik
           initialValues={{ email: "", password: "" }}
           validationSchema={loginSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
-            checkUseronDatabase(values);
+          onSubmit={(values, formikFunctions) => {
+            console.log(formikFunctions);
+            checkUseronDatabase(values, formikFunctions);
           }}
         >
           {({

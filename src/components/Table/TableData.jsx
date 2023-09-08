@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { Button, Card, Modal, Table } from "react-bootstrap";
-import DeleteModal from "./Model/DeleteModal";
+import DeleteModal from "../Model/DeleteModal";
 
 const TableData = ({
   handleDelete,

@@ -1,13 +1,26 @@
-export const SET_FETCH_ERROR = (data) => {
+export const SET_ERROR = (data) => {
   return {
-    type: "SET_FETCH_ERROR",
+    type: "SET_ERROR",
     payload: data,
   };
 };
 
-export const SET_LOADING_STATUS = (data) => {
+export const SET_USER = (data) => {
   return {
-    type: "SET_LOADING_STATUS",
+    type: "SET_USER",
+    payload: data,
+  };
+};
+
+export const REMOVE_USER = () => {
+  return {
+    type: "REMOVE_USER",
+  };
+};
+
+export const SET_LOADING = (data) => {
+  return {
+    type: "SET_LOADING",
     payload: data,
   };
 };

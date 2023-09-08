@@ -1,16 +1,25 @@
 const initState = {
+  user: JSON.parse(localStorage.getItem("user")) || null,
   formsArray: JSON.parse(localStorage.getItem("formsArray")) || [],
   error: false,
-  loading: false,
+  isLoading: false,
 };
 console.log(initState);
 
 const rootReducer = (state = initState, action) => {
   switch (action.type) {
-    case "SET_FETCH_ERROR":
+    case "SET_USER":
+      localStorage.setItem("user", JSON.stringify(action.payload));
+      return { ...state, user: action.payload };
+
+    case "REMOVE_USER":
+      localStorage.removeItem("user");
+      return { ...state, user: null };
+    case "SET_ERROR":
       return { ...state, error: action.payload };
-    case "SET_LOADING_STATUS":
-      return { ...state, loading: action.payload };
+
+    case "SET_LOADING":
+      return { ...state, isLoading: action.payload };
     case "GET_ALL_USER":
       console.log(action.payload);
       localStorage.setItem("formsArray", JSON.stringify(action.payload));

@@ -8,7 +8,7 @@ import UserInputForm from "../components/Form/UserInputForm";
 import { useDispatch, useSelector } from "react-redux";
 import { ADD_USER, EDIT_USER } from "../redux/actions/action.js";
 import { toast } from "react-toastify";
-import { addUser, editUser } from "../Service/service";
+import { addUser, editUser } from "../api/crudApi";
 
 const FormikForm2 = () => {
   const unique_id = uuid().slice(0, 8);

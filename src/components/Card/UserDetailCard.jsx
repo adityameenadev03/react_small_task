@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Button,
-  ButtonToolbar,
-  Card,
-  Col,
-  Container,
-  Row,
-} from "react-bootstrap";
+import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import DeleteModal from "../Model/DeleteModal";
 
@@ -30,16 +23,7 @@ const UserDetailCard = ({
               // xl="3"
               className="mb-4"
             >
-              <Card
-                style={{
-                  textAlign: "left",
-                  minHeight: "300px",
-                  minWidth: "270px",
-                  borderRadius: "12px",
-                  backgroundColor: "#E2E2E2",
-                }}
-                variant="light"
-              >
+              <Card className="w-100 h-100" variant="light">
                 <Card.Body>
                   <Card.Text>
                     <span className="fw-semibold"> Name </span> :{" "}

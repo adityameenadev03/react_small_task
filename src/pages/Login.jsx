@@ -18,7 +18,7 @@ const Login = () => {
         dispatch(SET_USER(data));
         navigate("/");
       }
-      console.log("fetch from server", data);
+      // console.log("fetch from server", data);
     } catch (err) {
       if (err.message.toLowerCase().includes("password")) {
         formikFunctions.setErrors({ password: err.message });

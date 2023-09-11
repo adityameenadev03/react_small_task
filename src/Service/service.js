@@ -27,27 +27,26 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     console.log(response);
-    successNotification("Fetched Data");
+    successNotification("fetched");
 
     return response;
   },
   (error) => {
     console.log(error);
-    notify(error);
-
     try {
-      switch (error.response.status) {
-        case 404:
-          throw Error("Not Found");
-        case 500:
-          throw Error("Internal Server Error");
+      if (error?.response?.data) {
+        throw Error(`${error?.response?.data?.message}`);
+      } else {
+        switch (error?.response?.status) {
+          case 404:
+            throw Error("Not Found");
+          case 500:
+            throw Error("Internal Server Error");
+        }
       }
-    } catch (err) {
+    } catch (error) {
+      toast.error(error?.message);
       return Promise.reject(error);
-    }
-
-    if (error.response && error.response.data) {
-      return Promise.reject(error.response.data);
     }
   }
 );

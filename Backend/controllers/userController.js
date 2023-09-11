@@ -16,7 +16,7 @@ const loginUser = async (req, res) => {
     res.status(200).json({ name, email, token });
   } catch (error) {
     console.log(error);
-    res.status(400).json({ ...error });
+    res.status(404).json({ status: "error", message: error.message });
   }
 };
 const signupUser = async (req, res) => {
@@ -32,7 +32,7 @@ const signupUser = async (req, res) => {
 
     res.status(200).json({ name, email, token });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ status: "error", message: error.message });
   }
 };
 

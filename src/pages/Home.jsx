@@ -4,29 +4,22 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Card, Container } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  ADD_USER,
-  DELETE_USER,
-  GET_ALL_USER,
-  SET_ERROR,
-  SET_LOADING,
-} from "../redux/actions/action";
+import { fetchAllUsers, deleteUser } from "../redux/actions/action";
 import UserDetailCard from "../components/Card/UserDetailCard";
 import Loader from "../components/Loader/Loader";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorComponent from "../components/Error/ErrorComponent";
 import NavBar from "../components/NavBar/NavBar";
-import { deleteUser, fetchAllUsers } from "../api/crudApi";
+import { ToastContainer } from "react-toastify";
 
 const Home = () => {
   const navigate = useNavigate();
   const [modelOpen, setModelOpen] = useState(false);
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
-  const { formsArray, isLoading, error } = useSelector(
-    (state) => state?.userData
-  );
+  const { formsArray, isLoading } = useSelector((state) => state?.userData);
   console.log(formsArray, isLoading, error);
 
   const notify = (error) => toast.error(error?.message);
@@ -39,45 +32,13 @@ const Home = () => {
 
   const handleDelete = (id) => {
     const deleteArray = [...formsArray].find((item) => item.personId == id);
-    const handleDelete = async () => {
-      try {
-        dispatch(SET_LOADING(true));
-        dispatch(SET_ERROR(null));
-        const data = await deleteUser(
-          `/userData/deleteUser/${deleteArray._id}`
-        );
-        if (data) {
-          dispatch(DELETE_USER(deleteArray._id));
-        }
-        dispatch(SET_LOADING(false));
-        dispatch(SET_ERROR(false));
-        successNotification("item deleted");
-        setModelOpen(false);
-      } catch (err) {
-        dispatch(SET_LOADING(false));
-        dispatch(SET_ERROR(err));
-      }
-    };
-    handleDelete();
+    dispatch(
+      deleteUser(`/userData/deleteUser/${deleteArray._id}`, deleteArray._id)
+    );
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        dispatch(SET_LOADING(true));
-        dispatch(SET_ERROR(null));
-        const data = await fetchAllUsers("/userData/getAllUsers");
-        if (data) {
-          dispatch(GET_ALL_USER([...data]));
-          dispatch(SET_LOADING(false));
-          dispatch(SET_ERROR(false));
-        }
-      } catch (err) {
-        dispatch(SET_LOADING(false));
-        dispatch(SET_ERROR(err));
-      }
-    };
-    fetchData();
+    dispatch(fetchAllUsers("/userData/getAllUsers"));
   }, []);
 
   return (

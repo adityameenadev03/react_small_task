@@ -6,14 +6,8 @@ import { Button, Card, Container, ToastContainer } from "react-bootstrap";
 import { v4 as uuid } from "uuid";
 import UserInputForm from "../components/Form/UserInputForm";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  ADD_USER,
-  EDIT_USER,
-  SET_ERROR,
-  SET_LOADING,
-} from "../redux/actions/action.js";
+import { addUser, editUser } from "../redux/actions/action";
 import { toast } from "react-toastify";
-import { addUser, editUser } from "../api/crudApi";
 
 const FormikForm2 = () => {
   const unique_id = uuid().slice(0, 8);
@@ -64,49 +58,23 @@ const FormikForm2 = () => {
             validateOnMount:true
             onSubmit={(values, actions) => {
               if (editing) {
-                const handleEdit = async () => {
-                  try {
-                    dispatch(SET_LOADING(true));
-                    dispatch(SET_ERROR(null));
-                    const data = await editUser("/userData/editUser", {
-                      ...values,
-                      personId: unique_id,
-                    });
-                    if (data) {
-                      dispatch(EDIT_USER({ ...data, personId: unique_id }));
-                      navigate("/");
-                    }
-                    dispatch(SET_LOADING(false));
-                    dispatch(SET_ERROR(null));
-                  } catch (err) {
-                    dispatch(SET_LOADING(false));
-                    dispatch(SET_ERROR(err));
-                  }
-                };
-                handleEdit();
-              } else {
-                const handleAddUser = async () => {
-                  try {
-                    dispatch(SET_LOADING(true));
-                    dispatch(SET_ERROR(null));
-                    const data = await addUser("/userData/addUser", {
-                      ...values,
-                      personId: unique_id,
-                    });
-                    if (data) {
-                      dispatch(ADD_USER({ ...data, personId: unique_id }));
-                    }
-                    actions.resetForm();
-                    navigate("/");
-                    dispatch(SET_LOADING(false));
-                    dispatch(SET_ERROR(null));
-                  } catch (err) {
-                    dispatch(SET_LOADING(false));
-                    dispatch(SET_ERROR(err));
-                  }
-                };
+                dispatch(
+                  editUser("/userData/editUser", {
+                    ...values,
+                    personId: unique_id,
+                  })
+                );
 
-                handleAddUser();
+                navigate("/");
+              } else {
+                dispatch(
+                  addUser("/userData/addUser", {
+                    ...values,
+                    personId: unique_id,
+                  })
+                );
+                actions.resetForm();
+                navigate("/");
               }
             }}
             validationSchema={basicSchema}

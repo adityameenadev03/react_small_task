@@ -10,7 +10,6 @@ function App() {
   return (
     <>
       <NavBar></NavBar>
-
       {routing}
     </>
   );

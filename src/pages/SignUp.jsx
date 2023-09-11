@@ -3,11 +3,7 @@ import React from "react";
 import { signUpSchema } from "../schema/signUpSchema";
 import { Button, Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  SET_USER,
-  SET_USER_ERROR,
-  SET_USER_LOADING,
-} from "../redux/actions/action";
+import { SET_USER } from "../redux/actions/action";
 import { Link, useNavigate } from "react-router-dom";
 import { signupUser } from "../api/authApi";
 
@@ -17,21 +13,15 @@ const SignUp = () => {
 
   const saveUseronDatabase = async (values) => {
     try {
-      dispatch(SET_USER_LOADING(true));
-      dispatch(SET_USER_ERROR(false));
       const data = await signupUser("/user/signupUser", values);
       if (data) {
         dispatch(SET_USER(data));
         navigate("/");
       }
-      dispatch(SET_USER_LOADING(false));
-      dispatch(SET_USER_ERROR(false));
 
       console.log("fetch from server", data);
     } catch (err) {
       console.log(err);
-      dispatch(SET_USER_LOADING(false));
-      dispatch(SET_USER_ERROR(err));
     }
   };
   return (

@@ -2,8 +2,6 @@ const userState = {
   userDetail: JSON.parse(localStorage.getItem("user")) || null,
   token: JSON.parse(localStorage.getItem("token")) || null,
   isLoggedIn: JSON.parse(localStorage.getItem("isLoggedIn")) || false,
-  error: null,
-  isLoading: false,
 };
 
 const userReducer = (state = userState, action) => {
@@ -25,17 +23,14 @@ const userReducer = (state = userState, action) => {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
       localStorage.removeItem("isLoggedIn");
+
       return {
         ...state,
         userDetail: null,
         token: null,
         isLoggedIn: false,
       };
-    case "SET_USER_ERROR":
-      return { ...state, error: action.payload };
 
-    case "SET_USER_LOADING":
-      return { ...state, isLoading: action.payload };
     default:
       return state;
   }

@@ -1,41 +1,37 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import React from "react";
-import { signUpSchema } from "../schema/signUpSchema";
 import { Button, Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { SET_ERROR, SET_USER } from "../redux/actions/action";
+import { SET_USER } from "../redux/actions/action";
 import { Link, useNavigate } from "react-router-dom";
 import { loginSchema } from "../schema/loginSchema";
 import { loginUser } from "../api/authApi";
+import { ToastContainer, toast } from "react-toastify";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const checkUseronDatabase = async (values, formikFunctions) => {
     try {
-      dispatch(SET_USER_LOADING(true));
-      dispatch(SET_USER_ERROR(false));
       const data = await loginUser("/user/loginUser", values);
       if (data) {
         dispatch(SET_USER(data));
         navigate("/");
       }
-      // console.log("fetch from server", data);
-      dispatch(SET_USER_LOADING(false));
-      dispatch(SET_USER_ERROR(false));
     } catch (err) {
-      dispatch(SET_USER_LOADING(false));
-      dispatch(SET_USER_ERROR(err));
-      if (err.message.toLowerCase().includes("password")) {
+      console.log("err", err.message);
+      if (err?.message?.toLowerCase().includes("password")) {
         formikFunctions.setErrors({ password: err.message });
-      } else if (err.message.toLowerCase().includes("email")) {
+      } else if (err?.message?.toLowerCase().includes("email")) {
         formikFunctions.setErrors({ email: err.message });
       }
+
       formikFunctions.setSubmitting(false);
     }
   };
   return (
     <>
+      <ToastContainer />
       <Container className="w-50 min-vh-100 d-flex justify-content-center align-items-center ">
         <Formik
           initialValues={{ email: "", password: "" }}

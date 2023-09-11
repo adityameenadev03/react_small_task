@@ -1,20 +1,13 @@
-const initState = {
-  user: JSON.parse(localStorage.getItem("user")) || null,
+const initialState = {
   formsArray: JSON.parse(localStorage.getItem("formsArray")) || [],
   error: false,
   isLoading: false,
 };
-console.log(initState);
 
-const rootReducer = (state = initState, action) => {
+const userDataReducer = (state = initialState, action) => {
+  console.log("hello");
+
   switch (action.type) {
-    case "SET_USER":
-      localStorage.setItem("user", JSON.stringify(action.payload));
-      return { ...state, user: action.payload };
-
-    case "REMOVE_USER":
-      localStorage.removeItem("user");
-      return { ...state, user: null };
     case "SET_ERROR":
       return { ...state, error: action.payload };
 
@@ -50,9 +43,10 @@ const rootReducer = (state = initState, action) => {
       console.log("to be edit array", { ...action.payload });
       console.log("after edit", newEditedArray);
       return { ...state, formsArray: [...newEditedArray] };
+
     default:
       return state;
   }
 };
 
-export default rootReducer;
+export default userDataReducer;

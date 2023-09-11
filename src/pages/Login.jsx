@@ -13,13 +13,19 @@ const Login = () => {
   const navigate = useNavigate();
   const checkUseronDatabase = async (values, formikFunctions) => {
     try {
+      dispatch(SET_USER_LOADING(true));
+      dispatch(SET_USER_ERROR(false));
       const data = await loginUser("/user/loginUser", values);
       if (data) {
         dispatch(SET_USER(data));
         navigate("/");
       }
       // console.log("fetch from server", data);
+      dispatch(SET_USER_LOADING(false));
+      dispatch(SET_USER_ERROR(false));
     } catch (err) {
+      dispatch(SET_USER_LOADING(false));
+      dispatch(SET_USER_ERROR(err));
       if (err.message.toLowerCase().includes("password")) {
         formikFunctions.setErrors({ password: err.message });
       } else if (err.message.toLowerCase().includes("email")) {

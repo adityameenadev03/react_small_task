@@ -24,10 +24,10 @@ const Home = () => {
   const [modelOpen, setModelOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const formsArray = useSelector((state) => state?.formsArray);
-
-  const isLoading = useSelector((state) => state?.isLoading);
-  const error = useSelector((state) => state?.error);
+  const { formsArray, isLoading, error } = useSelector(
+    (state) => state?.userData
+  );
+  console.log(formsArray, isLoading, error);
 
   const notify = (error) => toast.error(error?.message);
   const successNotification = (message) => toast.success(message);
@@ -39,11 +39,26 @@ const Home = () => {
 
   const handleDelete = (id) => {
     const deleteArray = [...formsArray].find((item) => item.personId == id);
-
-    deleteUser(`/userData/deleteUser/${deleteArray._id}`);
-    dispatch(DELETE_USER(deleteArray._id));
-    successNotification("item deleted");
-    setModelOpen(false);
+    const handleDelete = async () => {
+      try {
+        dispatch(SET_LOADING(true));
+        dispatch(SET_ERROR(null));
+        const data = await deleteUser(
+          `/userData/deleteUser/${deleteArray._id}`
+        );
+        if (data) {
+          dispatch(DELETE_USER(deleteArray._id));
+        }
+        dispatch(SET_LOADING(false));
+        dispatch(SET_ERROR(false));
+        successNotification("item deleted");
+        setModelOpen(false);
+      } catch (err) {
+        dispatch(SET_LOADING(false));
+        dispatch(SET_ERROR(err));
+      }
+    };
+    handleDelete();
   };
 
   useEffect(() => {
@@ -64,8 +79,6 @@ const Home = () => {
     };
     fetchData();
   }, []);
-
-  console.log(error, isLoading);
 
   return (
     <>

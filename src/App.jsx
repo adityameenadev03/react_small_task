@@ -5,9 +5,8 @@ import "./App.css";
 import NavBar from "./components/NavBar/NavBar";
 
 function App() {
-  const user = useSelector((state) => state?.user);
-  console.log(user);
-  const routing = useRoutes(routes(user));
+  const { isLoggedIn } = useSelector((state) => state?.user);
+  const routing = useRoutes(routes(isLoggedIn));
   return (
     <>
       <NavBar></NavBar>

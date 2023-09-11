@@ -5,6 +5,26 @@ export const SET_ERROR = (data) => {
   };
 };
 
+export const SET_LOADING = (data) => {
+  return {
+    type: "SET_LOADING",
+    payload: data,
+  };
+};
+
+export const SET_USER_ERROR = (data) => {
+  return {
+    type: "SET_USER_ERROR",
+    payload: data,
+  };
+};
+
+export const SET_USER_LOADING = (data) => {
+  return {
+    type: "SET_USER_LOADING",
+    payload: data,
+  };
+};
 export const SET_USER = (data) => {
   return {
     type: "SET_USER",
@@ -15,13 +35,6 @@ export const SET_USER = (data) => {
 export const REMOVE_USER = () => {
   return {
     type: "REMOVE_USER",
-  };
-};
-
-export const SET_LOADING = (data) => {
-  return {
-    type: "SET_LOADING",
-    payload: data,
   };
 };
 

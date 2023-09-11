@@ -5,7 +5,7 @@ import { REMOVE_USER } from "../../redux/actions/action";
 import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
-  const user = useSelector((state) => state?.user);
+  const { isLoggedIn, userDetail } = useSelector((state) => state?.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const logoutUser = () => {
@@ -20,9 +20,9 @@ const NavBar = () => {
           <Nav.Link className="ms-3 p-2" href="/">
             Home
           </Nav.Link>
-          {user ? (
+          {isLoggedIn ? (
             <>
-              <Nav.Link className="ms-3">Hi, {user.name} </Nav.Link>
+              <Nav.Link className="ms-3">Hi, {userDetail.name} </Nav.Link>
               <Nav.Link className="ms-3" onClick={logoutUser}>
                 <Button variant="danger" size="sm">
                   Logout

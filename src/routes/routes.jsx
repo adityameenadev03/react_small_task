@@ -5,25 +5,25 @@ import FormikForm2 from "../pages/FormikForm2";
 import SignUp from "../pages/SignUp";
 import Login from "../pages/Login";
 
-const routes = (user) => [
+const routes = (isLoggedIn) => [
   {
     path: "/",
-    element: user ? <Home></Home> : <Navigate to="/login" />,
+    element: isLoggedIn ? <Home></Home> : <Navigate to="/login" />,
     errorElement: <ErrorPage />,
   },
 
   {
     path: "/formik2",
-    element: user ? <FormikForm2 /> : <Navigate to="/login" />,
+    element: isLoggedIn ? <FormikForm2 /> : <Navigate to="/login" />,
   },
   {
     path: "/signup",
-    element: <SignUp />,
+    element: isLoggedIn ? <Home></Home> : <SignUp />,
   },
 
   {
     path: "/login",
-    element: <Login />,
+    element: isLoggedIn ? <Home></Home> : <Login />,
   },
 ];
 

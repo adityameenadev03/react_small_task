@@ -13,7 +13,7 @@ const SignUp = () => {
   const user = useSelector((state) => state?.user);
   const saveUseronDatabase = async (values) => {
     try {
-      const data = await signupUser("/signupUser", values);
+      const data = await signupUser("/user/signupUser", values);
       dispatch(SET_USER(data));
       navigate("/");
       console.log("fetch from server", data);

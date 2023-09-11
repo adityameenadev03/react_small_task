@@ -6,7 +6,7 @@ const notify = (error) => toast.error(error?.message);
 const successNotification = (message) => toast.success(message);
 
 export const instance = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: "http://localhost:8000/api",
 });
 
 instance.interceptors.request.use(

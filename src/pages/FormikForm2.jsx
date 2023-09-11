@@ -60,7 +60,7 @@ const FormikForm2 = () => {
             onSubmit={(values, actions) => {
               if (editing) {
                 const editUserOnApi = async () => {
-                  const data = await editUser("/editUser", {
+                  const data = await editUser("/userData/editUser", {
                     ...values,
                     personId: unique_id,
                   });
@@ -71,7 +71,7 @@ const FormikForm2 = () => {
                 editUserOnApi();
               } else {
                 const addUserFetch = async () => {
-                  const data = await addUser("/addUser", {
+                  const data = await addUser("/userData/addUser", {
                     ...values,
                     personId: unique_id,
                   });

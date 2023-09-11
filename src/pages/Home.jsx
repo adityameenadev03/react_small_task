@@ -40,7 +40,7 @@ const Home = () => {
   const handleDelete = (id) => {
     const deleteArray = [...formsArray].find((item) => item.personId == id);
 
-    deleteUser(`deleteUser/${deleteArray._id}`);
+    deleteUser(`/userData/deleteUser/${deleteArray._id}`);
     dispatch(DELETE_USER(deleteArray._id));
     successNotification("item deleted");
     setModelOpen(false);
@@ -51,7 +51,7 @@ const Home = () => {
       try {
         dispatch(SET_LOADING(true));
         dispatch(SET_ERROR(null));
-        const data = await fetchAllUsers("/getAllUsers");
+        const data = await fetchAllUsers("/userData/getAllUsers");
         if (data) {
           dispatch(GET_ALL_USER([...data]));
           dispatch(SET_LOADING(false));

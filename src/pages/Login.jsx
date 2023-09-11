@@ -13,7 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
   const checkUseronDatabase = async (values, formikFunctions) => {
     try {
-      const data = await loginUser("/api/userData/loginUser", values);
+      const data = await loginUser("/user/loginUser", values);
       if (data) {
         dispatch(SET_USER(data));
         navigate("/");
